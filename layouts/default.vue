@@ -15,29 +15,29 @@
           router
           exact
         >
-          <v-list-tile-action v-if="i == 0">
+          <v-list-item-action v-if="i == 0">
             <v-icon v-html="item.icon"></v-icon>
-          </v-list-tile-action>
-          <v-list-tile-action v-else>
+          </v-list-item-action>
+          <v-list-item-action v-else>
             <v-avatar size="38">
               <img
                 :src="item.url"
               >
             </v-avatar>
-          </v-list-tile-action>
+          </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <!-- <v-app-bar
+    <v-app-bar
       :clipped-left="clipped"
       dense
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <!-- <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
@@ -56,17 +56,17 @@
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn> -->
-      <!-- <v-spacer />
+      <v-spacer />
       <v-toolbar-title v-text="title"
       class="pr-3"/>
-      <v-spacer /> -->
+      <v-spacer />
       <!-- <v-btn
         icon
         @click.stop="rightDrawer = !rightDrawer"
       >
         <v-icon>mdi-menu</v-icon>
       </v-btn> -->
-    <!-- </v-app-bar> -->
+    </v-app-bar>
     <v-main>
       <v-container>
         <nuxt />
@@ -133,6 +133,26 @@ export default {
       right: true,
       rightDrawer: false,
       title: '작 두 개 미'
+    }
+  },
+  mounted() {
+    this.monthEvent()
+    this.weekEvent()
+  },
+  methods: {
+    monthEvent() {
+      let valid = false
+      let count = 0
+      count = this.$moment("20211007", "YYYYMMDD").fromNow()
+        // setInterval(() => {
+        // }, 1000);
+    },
+    weekEvent() {
+    }
+  },
+  watch: {
+    moment(handler) {
+      console.log(handler)
     }
   }
 }
