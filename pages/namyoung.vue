@@ -102,9 +102,17 @@
                     outlined
                     rounded
                     text
-                    @click="regist"
+                    @click="regist()"
                   >
                     등록
+                  </v-btn>
+                  <v-btn
+                    outlined
+                    rounded
+                    text
+                    @click="getList()"
+                  >
+                    get
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -162,6 +170,11 @@
 </template>
 
 <script>
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
+import { collection, addDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+
 export default {
   data () {
     return {
@@ -177,10 +190,10 @@ export default {
       ],
       items: [
         {
-          src: '/namyoungProfile2.png',
+          // src: '/namyoungProfile2.png',
         },
         {
-          src: '/namyoungProfile1.png',
+          // src: '/namyoungProfile1.png',
         },
       ],
       reset: false,
@@ -194,24 +207,54 @@ export default {
         ip: '',
       },
       guestBook: [],
+      db: null,
     }
   },
   mounted() {
-    this.guestBook = this.$store.state.guestBook.datas
+    const firebaseApp = initializeApp({
+      apiKey: 'AIzaSyD0cTVoH2slzJ-UzfKUTb4QtfNv_pfd5Qo',
+      authDomain: 'https://hot-nam-intro-default-rtdb.firebaseio.com',
+      projectId: 'hot-nam-intro'
+    });
+    this.db = getFirestore();
+
+    // this.guestBook = this.$store.state.guestBook.datas
   },
   methods: {
     async regist() {
-      this.registForm.content = this.content
-      this.registForm.time = this.$moment().format();
-      await this.$store.dispatch('GUESTBOOK', this.registForm)
-      this.reset = true
+      // this.registForm.content = this.content
+      // this.registForm.time = this.$moment().format();
+      // await this.$store.dispatch('GUESTBOOK', this.registForm)
+      // this.reset = true
+      try {
+        const docRef = await addDoc(collection(this.db, "users"), {
+          first: "Ada",
+          last: "Lovelace",
+          born: 1815
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+    },
+    async getList() {
+      const usersCollectionRef = collection(this.db, 'users');
+      console.log(usersCollectionRef)
+      // const docRef = doc(this.db, "users", "KJRr8vbXhlDxEGMSJ6SU");
+      // const docSnap = await getDoc(docRef);
+      // if (docSnap.exists()) {
+      //   console.log("Document data:", docSnap.data());
+      // } else {
+      //   // doc.data() will be undefined in this case
+      //   console.log("No such document!");
+      // }
     }
   },
   watch: {
     reset() {
       if(this.reset == true) {
         this.reset = false
-        location.reload();
+        // location.reload();
       }
     }
   },

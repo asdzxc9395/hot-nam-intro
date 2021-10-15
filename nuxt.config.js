@@ -40,7 +40,8 @@ export default {
   modules: [
     ['nuxt-vuex-localstorage', {
       sessionStorage: ['guestBook', 'accessInformation']  //  설정하지 않을 경우 'sessionStorage' 가 기본값으로 설정됩니다
-    }]
+    }],
+    
   ],
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
