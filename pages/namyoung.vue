@@ -8,7 +8,7 @@
         color="black"
       >
         <!-- <v-system-bar lights-out></v-system-bar> -->
-        <v-card-title class="text-h6 font-weight-regular justify-space-between">
+        <!-- <v-card-title class="text-h6 font-weight-regular justify-space-between">
           <span>{{ '' }}</span>
           <v-avatar
             color="primary lighten-2"
@@ -16,7 +16,7 @@
             size="24"
             v-text="step"
           ></v-avatar>
-        </v-card-title>
+        </v-card-title> -->
       
       
         <v-window v-model="step">
@@ -31,27 +31,22 @@
               height="400"
               style="border-radius: 20px;"
             >
-              <v-carousel-item
-                v-for="(slide, i) in slides"
-                :key="i"
-              >
+              <div 
+                v-for="(item, i) in items"
+                :key="i">
                 <v-sheet
                   :color="colors[i]"
                   height="100%"
                   tile
                 >
-                  <v-row
-                    class="fill-height"
-                    align="center"
-                    justify="center"
+                  <v-carousel-item
+                    :src="item.src"
                   >
-                    <div class="text-h2">
-                      {{ slide }} Slide
-                    </div>
-                  </v-row>
+                  </v-carousel-item>
                 </v-sheet>
-              </v-carousel-item>
+              </div>
             </v-carousel>
+
             <v-list>
               <v-list-item>
                 <!-- <v-list-item-avatar>
@@ -82,7 +77,62 @@
           </v-window-item>
 
           <v-window-item :value="2">
+              <v-card
+                class="mx-auto"
+                max-width="344"
+                outlined
+              >
+                <v-list-item>
+                  <v-list-item-content class="mt-1 py-0">
+                    <v-list-item-title class="text-h5 pt-1">
+                      <v-text-field
+                        label="방명록"
+                        color="gray"
+                        placeholder="남영이를 위해 한마디를 적어줘!"
+                        v-model="content"
+                        rows="3"
+                        row-height="25"
+                      ></v-text-field>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-card-actions class="pt-0">
+                <v-spacer></v-spacer>
+                  <v-btn
+                    outlined
+                    rounded
+                    text
+                    @click="regist"
+                  >
+                    등록
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
 
+              <v-system-bar lights-out></v-system-bar>
+
+              <v-card
+                class="mx-auto my-3"
+                max-width="344"
+                outlined
+                v-for="(item, i) in this.guestBook"
+                :key=i
+              >
+                <v-list-item>
+                  <v-list-item-content class="my-0 py-0">
+                    <v-list-item-title class="text-h5 pt-1">
+                      <v-text-field
+                        :label="item.time"
+                        color="gray"
+                        v-model="item.content"
+                        rows="3"
+                        row-height="25"
+                        readonly
+                      ></v-text-field>
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
           </v-window-item>
         </v-window>
 
@@ -112,33 +162,57 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
 export default {
-  components: {
-    Logo,
-    VuetifyLogo
-  },
   data () {
     return {
       colors: [
-        'green',
-        'secondary',
-        'yellow darken-4',
         'red lighten-2',
         'orange darken-1',
+        'yellow darken-4',
+        'secondary',
       ],
       cycle: false,
       slides: [
-        'First',
-        'Second',
-        'Third',
-        'Fourth',
-        'Fifth',
+
       ],
+      items: [
+        {
+          src: '/namyoungProfile2.png',
+        },
+        {
+          src: '/namyoungProfile1.png',
+        },
+      ],
+      reset: false,
       counted: 0,
       step: 1,
+      content: '',
+      registForm: {
+        state: 2,
+        content: '',
+        time: '',
+        ip: '',
+      },
+      guestBook: [],
+    }
+  },
+  mounted() {
+    this.guestBook = this.$store.state.guestBook.datas
+  },
+  methods: {
+    async regist() {
+      this.registForm.content = this.content
+      this.registForm.time = this.$moment().format();
+      await this.$store.dispatch('GUESTBOOK', this.registForm)
+      this.reset = true
+    }
+  },
+  watch: {
+    reset() {
+      if(this.reset == true) {
+        this.reset = false
+        location.reload();
+      }
     }
   },
   computed: {
