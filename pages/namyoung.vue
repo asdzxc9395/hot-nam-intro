@@ -173,6 +173,7 @@
 import { initializeApp } from "firebase/app"
 import { getFirestore } from "firebase/firestore"
 import { collection, addDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore";
 import { doc, getDoc } from "firebase/firestore";
 
 export default {
@@ -222,15 +223,16 @@ export default {
   },
   methods: {
     async regist() {
-      // this.registForm.content = this.content
-      // this.registForm.time = this.$moment().format();
-      // await this.$store.dispatch('GUESTBOOK', this.registForm)
-      // this.reset = true
+      this.registForm.content = this.content
+      this.registForm.time = this.$moment().format();
+      
       try {
-        const docRef = await addDoc(collection(this.db, "users"), {
-          first: "Ada",
-          last: "Lovelace",
-          born: 1815
+        // const docRef = await addDoc(collection(this.db, "users", "namyoung"), {
+        //   guestBook: this.guestBook
+        // });
+
+        const docRef = await setDoc(doc(this.db, "users", "namyoung"), {
+          guestBook: this.guestBook,
         });
         console.log("Document written with ID: ", docRef.id);
       } catch (e) {
@@ -238,16 +240,14 @@ export default {
       }
     },
     async getList() {
-      const usersCollectionRef = collection(this.db, 'users');
-      console.log(usersCollectionRef)
-      // const docRef = doc(this.db, "users", "KJRr8vbXhlDxEGMSJ6SU");
-      // const docSnap = await getDoc(docRef);
-      // if (docSnap.exists()) {
-      //   console.log("Document data:", docSnap.data());
-      // } else {
-      //   // doc.data() will be undefined in this case
-      //   console.log("No such document!");
-      // }
+      const docRef = doc(this.db, "users", "KJRr8vbXhlDxEGMSJ6SU");
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
     }
   },
   watch: {
